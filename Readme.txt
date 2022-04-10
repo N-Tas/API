@@ -28,7 +28,7 @@ every polynomial has a random calculation time.
 - Invokes the get_elem method of the BGManager, which is invoking the get_polynomial method of the instance of the DBManager.
 - The Database is opened and the row with the respective ID is retrieved. 
 - If there is a polynomial behind the ID, the polynomial with its result, computed or not, are returned. 
-- If there is no polynomial-data behind the ID, a None is returned. 
+- If there is no polynomial-data behind the ID, Code 204 "No Content" is returned. 
 - The retrieved data is prepared in a dictionary and returned to the API GET method. 
 - The FastAPI converts the data directly into JSON.
 

@@ -1,6 +1,8 @@
 import asyncio
 import threading
 import queue
+
+from markupsafe import re
 from polynomial_components import CubicEQN, Pair, Bindigns
 from database_manager import DBManager
 
@@ -18,6 +20,7 @@ class BGManager:
         self.bindings = Bindigns("lib_heavy_calc.so")
         self.first_call = True 
         self.DECIMAL_POINT = 4
+        self.NO_CONTENT = 204
         
     # Call the C++ lib, compute and update the db
     def __worker(self):
@@ -58,11 +61,19 @@ class BGManager:
         
     # Get the polynomial with the selected ID from the DB
     def get_elem(self, id):
-        return self.db_manager.get_polynomial(statement="SELECT* FROM POLYNOMIAL WHERE ID=?",id=id)
+        response = self.db_manager.get_polynomial(statement="SELECT* FROM POLYNOMIAL WHERE ID=?",id=id)
+        if response:
+            return response
+        else:
+            return self.NO_CONTENT
         
     # Get a list with all polynomials in the DB
     def get_lst(self):
-        return self.db_manager.get_polynomial(statement="SELECT * FROM POLYNOMIAL") 
+        response = self.db_manager.get_polynomial(statement="SELECT * FROM POLYNOMIAL") 
+        if response:
+            return response
+        else:
+            return self.NO_CONTENT
     
     # Call main
     async def run_main(self):
