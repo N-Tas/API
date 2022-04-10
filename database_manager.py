@@ -1,9 +1,9 @@
-from sql_functions import SQLite
+from sqlite_wrapper import SQLite
 from polynomial_components import CubicEQN, PolynomialDict
 import re
 
 # -------------------------------------------------------------------
-# Wraper for the SQLite class
+# Manages the wrapped functions in the sqlite_wrapper
 # -------------------------------------------------------------------
 class DBManager:
 # -------------------------------------------------------------------
