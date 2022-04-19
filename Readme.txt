@@ -25,7 +25,8 @@ every polynomial has a random calculation time.
 - After the compute, the object is updated in the DB over its ID, which is passed to the queue with the model. 
 
 3. GET{ID}
-- Invokes the get_elem method of the BGManager, which is invoking the get_polynomial method of the instance of the DBManager.
+- Invokes the get method of the BGManager and passes the entered ID to it, 
+which is invoking the get_polynomial method of the instance of the DBManager.
 - The Database is opened and the row with the respective ID is retrieved. 
 - If there is a polynomial behind the ID, the polynomial with its result, computed or not, are returned. 
 - If there is no polynomial-data behind the ID, Code 204 "No Content" is returned. 
@@ -33,7 +34,7 @@ every polynomial has a random calculation time.
 - The FastAPI converts the data directly into JSON.
 
 4. GET
-- Invokes the get_list method of the BGManager.
-- The GET works in the same way as the GET{ID}, but the invoked method get_list retrieves all polynomials from the Database
-and it returns a list of polynomial dictionaries. 
+- Invokes the get method of the BGManager, but this time no ID is passed.
+- The GET works in the same way as the GET{ID}, but the invoked method get without an ID
+retrieves all polynomials from the Database and it returns a list of polynomial dictionaries. 
 

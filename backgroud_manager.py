@@ -59,17 +59,14 @@ class BGManager:
             self.calc_queue.put(Pair(row_id,model_ce))  
         return row_id  
         
-    # Get the polynomial with the selected ID from the DB
-    def get_elem(self, id):
-        response = self.db_manager.get_polynomial(statement="SELECT* FROM POLYNOMIAL WHERE ID=?",id=id)
-        if response:
-            return response
+    # Get the polynomial with the selected ID from the DB or a list
+    def get(self, id=None):
+        response = None
+        if id != None:
+            response = self.db_manager.get_polynomial(statement="SELECT* FROM POLYNOMIAL WHERE ID=?",id=id)
         else:
-            return self.NO_CONTENT
-        
-    # Get a list with all polynomials in the DB
-    def get_lst(self):
-        response = self.db_manager.get_polynomial(statement="SELECT * FROM POLYNOMIAL") 
+            response = self.db_manager.get_polynomial(statement="SELECT * FROM POLYNOMIAL") 
+        # Retrurn the result    
         if response:
             return response
         else:
@@ -86,6 +83,7 @@ class BGManager:
         # Retrieve all not computed polynomials from the DB and put those in a queue
         # Run once on object creation
         if self.first_call:
+            self.first_call = False
             lst_content = self.db_manager.get_polynomial(statement="SELECT* FROM POLYNOMIAL WHERE result IS NULL")
             if lst_content:
                 for elem in lst_content:
@@ -94,7 +92,7 @@ class BGManager:
                     row_id = int(elem.get("ID"))
                     model_ce = CubicEQN(x= elem_x, polynomial= elem_polynomial)
                     self.calc_queue.put(Pair(row_id,model_ce)) 
-                    self.first_call = False 
+             
                     
         while True:
             # await to finish 

@@ -20,12 +20,12 @@ def add(model_ce: CubicEQN):
 # Get a single polynomial with the passed id        
 @app.get("/polynomial/{id}")
 def get_single(id:int):
-    return background_manager.get_elem(id)
+    return background_manager.get(id)
 
 # Get all polynomials 
 @app.get("/polynomial")
 def get_list():
-    return background_manager.get_lst()
+    return background_manager.get()
 
 # Run uvicorn 
 if __name__ == "__main__":
