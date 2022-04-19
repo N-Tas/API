@@ -92,8 +92,7 @@ class BGManager:
                     row_id = int(elem.get("ID"))
                     model_ce = CubicEQN(x= elem_x, polynomial= elem_polynomial)
                     self.calc_queue.put(Pair(row_id,model_ce)) 
-             
-                    
+                     
         while True:
             # await to finish 
             await asyncio.sleep(0.1)
