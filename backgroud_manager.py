@@ -1,8 +1,6 @@
 import asyncio
 import threading
 import queue
-
-from markupsafe import re
 from polynomial_components import CubicEQN, Pair, Bindigns
 from database_manager import DBManager
 
@@ -59,14 +57,14 @@ class BGManager:
             self.calc_queue.put(Pair(row_id,model_ce))  
         return row_id  
         
-    # Get the polynomial with the selected ID from the DB or a list
+    # Get the polynomial with the selected ID from the DB when an ID is passed
+    # Get the a list of polynomials when no ID is passed
     def get(self, id=None):
         response = None
         if id != None:
             response = self.db_manager.get_polynomial(statement="SELECT* FROM POLYNOMIAL WHERE ID=?",id=id)
         else:
-            response = self.db_manager.get_polynomial(statement="SELECT * FROM POLYNOMIAL") 
-        # Retrurn the result    
+            response = self.db_manager.get_polynomial(statement="SELECT * FROM POLYNOMIAL")    
         if response:
             return response
         else:
@@ -83,7 +81,6 @@ class BGManager:
         # Retrieve all not computed polynomials from the DB and put those in a queue
         # Run once on object creation
         if self.first_call:
-            self.first_call = False
             lst_content = self.db_manager.get_polynomial(statement="SELECT* FROM POLYNOMIAL WHERE result IS NULL")
             if lst_content:
                 for elem in lst_content:
@@ -91,8 +88,8 @@ class BGManager:
                     elem_polynomial = elem.get("polynomial")
                     row_id = int(elem.get("ID"))
                     model_ce = CubicEQN(x= elem_x, polynomial= elem_polynomial)
-                    self.calc_queue.put(Pair(row_id,model_ce)) 
-                     
+                    self.calc_queue.put(Pair(row_id,model_ce))      
+            self.first_call = False
         while True:
             # await to finish 
             await asyncio.sleep(0.1)
